@@ -11,9 +11,9 @@ import numpy as np
 
 alfa = [0, -np.pi / 2, np.pi / 2, np.pi / 2, -np.pi / 2, -np.pi / 2, np.pi / 2]
 # iiwa 7 R 800
-# d = [0.34, 0.0, 0.4, 0.0, 0.4, 0.0, 0.126]
+d = [0.34, 0.0, 0.4, 0.0, 0.4, 0.0, 0.126]
 # iiwa 14 R 820
-d = [0.36, 0.0, 0.42, 0.0, 0.4, 0.0, 0.126]
+# d = [0.36, 0.0, 0.42, 0.0, 0.4, 0.0, 0.126]
 
 
 def getDoubleFromString(message, size):

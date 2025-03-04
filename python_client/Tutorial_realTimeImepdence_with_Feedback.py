@@ -16,11 +16,31 @@ plot joints torques feedback while controlling the robot
 
 import math
 import time
+import numpy.core.multiarray
 
 import matplotlib.pyplot as plt
 
 from iiwaPy3 import iiwaPy3
 
+from MATLABToolBoxStart import MATLABToolBoxStart
+
+# KUKA iiwa robot IP and port
+#KUKA_IP = "192.168.0.50"  # Replace with actual robot IP KUKA 141
+KUKA_IP = "192.168.0.49"  # Replace with actual robot IP KUKA 71
+KUKA_PORT = 30300 # default port, any changes should reflect in WB
+# start the matlab client
+wakeup = MATLABToolBoxStart(KUKA_IP,KUKA_PORT)
+try:
+    wakeup.start_client()
+    time.sleep(2)
+except Exception as e:
+    print(f"Starting client failed with error message: {e}")
+
+# Connect to the robot
+try:
+    iiwa = iiwaPy3(KUKA_IP)
+except Exception as e:
+    print(f"Client running but connection failed with error message: {e}")
 
 def updateArrays(x, y, n, x1, y1):
     temp = n - 1
@@ -38,24 +58,16 @@ def updatePlot(line, fig, x, y):
     fig.canvas.draw()
     fig.canvas.flush_events()
 
+n=50
+x = np.zeros(n)
+y = np.sin(x)
 
-# n=50
-# x = np.zeros(n)
-# y = np.sin(x)
+plt.ion()
 
-# plt.ion()
+fig = plt.figure()
+graph = fig.add_subplot(111)
+line1, = graph.plot(x, y, 'r-') # Returns a tuple of line objects, thus the comma
 
-# fig = plt.figure()
-# graph = fig.add_subplot(111)
-# line1, = graph.plot(x, y, 'r-') # Returns a tuple of line objects, thus the comma
-
-# Connect to the robot
-ip = '172.31.1.147'
-# ip='localhost'
-iiwa = iiwaPy3(ip)
-iiwa.setBlueOn()
-time.sleep(2)
-iiwa.setBlueOff()
 # read some data from the robot
 try:
     # Move to an initial position    
@@ -95,7 +107,7 @@ try:
             # y1=taw[0]
             # x1=deltat
             # updateArrays(x,y,n,x1,y1)
-            # updatePlot(line1,fig,x,y)
+            updatePlot(line1,fig,x,y)
             t_0 = time.time()
             counter = counter + 1
 

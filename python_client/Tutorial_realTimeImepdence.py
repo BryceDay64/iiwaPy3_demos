@@ -17,23 +17,34 @@ plot joints torques feedback while controlling the robot
 import math
 import time
 from datetime import datetime
-
 from iiwaPy3 import iiwaPy3
+
+from MATLABToolBoxStart import MATLABToolBoxStart
+
+# KUKA iiwa robot IP and port
+#KUKA_IP = "192.168.0.50"  # Replace with actual robot IP KUKA 141
+KUKA_IP = "192.168.0.49"  # Replace with actual robot IP KUKA 71
+KUKA_PORT = 30300 # default port, any changes should reflect in WB
+# start the matlab client
+wakeup = MATLABToolBoxStart(KUKA_IP,KUKA_PORT)
+try:
+    wakeup.start_client()
+    time.sleep(2)
+except Exception as e:
+    print(f"Starting client failed with error message: {e}")
+
+# Connect to the robot
+try:
+    iiwa = iiwaPy3(KUKA_IP)
+except Exception as e:
+    print(f"Client running but connection failed with error message: {e}")
+
 
 
 def getSecs():
     t = datetime.now()
     sec = ((t.day * 24 + t.hour) * 60 + t.minute) * 60 + t.second + t.microsecond / 1000000.0
     return sec
-
-
-# Connect to the robot
-ip = '172.31.1.147'
-# ip='localhost'
-iiwa = iiwaPy3(ip)
-iiwa.setBlueOn()
-time.sleep(2)
-iiwa.setBlueOff()
 
 # read some data from the robot
 try:
@@ -55,18 +66,18 @@ try:
     print("Current joints positions")
     print(jpos)
     # Define the load data
-    weightOfTool = 1.0  # 1 kg
-    cOMx = 0.0
-    cOMy = 0.0
-    cOMz = 0.0
+    # got this data from the controller
+    weightOfTool = 1.73  # 1 kg
+    cOMx = 0.01554
+    cOMy = 0.01906
+    cOMz = 0.05352
 
-    cStiness = 900
+    cStiness = 2500
     rStifness = 80
     nStifness = 50
 
     iiwa.realTime_startImpedanceJoints(weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness)
     iiwa.realTime_stopDirectServoJoints()
-
     iiwa.realTime_startImpedanceJoints(weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness)
 
     t0 = getSecs()
@@ -82,7 +93,6 @@ try:
 
     deltat = getSecs() - t0
     # movig point to point again
-    print('Turning off realtime control')
     iiwa.realTime_stopDirectServoJoints()
     print('Realtime control turned off')
     time.sleep(0.5)

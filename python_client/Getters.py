@@ -6,7 +6,7 @@ A while loop is added in the get functions.
 @author: Mohammad SAFEEA
 """
 
-from .GeneralPurpose import getDoubleFromString
+from GeneralPurpose import getDoubleFromString
 
 
 class Getters:

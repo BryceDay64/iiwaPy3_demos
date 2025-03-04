@@ -9,8 +9,8 @@ import math
 import sys
 import time
 
-from .Getters import Getters
-from .Senders import Senders
+from Getters import Getters
+from Senders import Senders
 
 
 class PTP:

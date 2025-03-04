@@ -19,7 +19,7 @@ import time
 from iiwaPy3 import iiwaPy3
 
 # Connect to the robot
-ip = '172.31.1.147'
+ip = '192.168.0.50'
 # ip='localhost'
 iiwa = iiwaPy3(ip)
 iiwa.setBlueOn()

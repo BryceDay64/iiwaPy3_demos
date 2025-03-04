@@ -1,9 +1,9 @@
-from .Getters import Getters
-from .PTP import PTP
-from .RealTime import RealTime
-from .Senders import Senders
-from .Setters import Setters
-from .mySock import mySock
+from Getters import Getters
+from PTP import PTP
+from RealTime import RealTime
+from Senders import Senders
+from Setters import Setters
+from mySock import mySock
 
 
 class iiwaPy3:

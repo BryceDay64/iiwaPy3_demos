@@ -11,7 +11,7 @@ import time
 
 import numpy as np
 
-from .GeneralPurpose import getDoubleFromString
+from GeneralPurpose import getDoubleFromString
 
 
 class Senders:
