@@ -1,5 +1,9 @@
 import math
 import time
+import subprocess
+
+gripper_open_script = "/home/l5vel/kuka/onrobot-rg/src/open_demo.py"
+gripper_close_script = "/home/l5vel/kuka/onrobot-rg/src/close_demo.py"
 
 from iiwaPy3 import iiwaPy3
 from MATLABToolBoxStart import MATLABToolBoxStart
@@ -8,13 +12,13 @@ from MATLABToolBoxStart import MATLABToolBoxStart
 #KUKA_IP = "192.168.0.50"  # Replace with actual robot IP KUKA 141
 KUKA_IP = "192.168.0.49"  # Replace with actual robot IP KUKA 71
 KUKA_PORT = 30300 # default port, any changes should reflect in WB
-# start the matlab client
-wakeup = MATLABToolBoxStart(KUKA_IP,KUKA_PORT)
-try:
-    wakeup.start_client()
-    time.sleep(2)
-except Exception as e:
-    print(f"Starting client failed with error message: {e}")
+# # start the matlab client
+# wakeup = MATLABToolBoxStart(KUKA_IP,KUKA_PORT)
+# try:
+#     wakeup.start_client()
+#     time.sleep(2)
+# except Exception as e:
+#     print(f"Starting client failed with error message: {e}")
 
 # Connect to the robot
 try:
@@ -82,7 +86,51 @@ def create_lemniscate_spline(center_frame):
     ]
     
 try:
-    # go_home()
+    subprocess.run(['python', gripper_open_script])  
+    poses = [
+    # [0, 0, 0, 0, 0, 0,0],
+    [0, 0.3490658503988659, 0, -1.9198621771937625, 0, -0.6981317007977318, 0],
+    [-1.8519576280618033, 0.338401674539098, 0.010143388046013073, -1.7310535168188748, 0.011248297614187204, 0.9305050160863391, -0.25927043669260386],
+    [-1.8471252290421376, 0.6731921426462674, 0.010166937010028685, -1.7608451015264406, 0.010367600982972363, 0.5656866344553269, -0.2585670825303519],
+    [-1.8684400719132628, 0.1652240520453777, 0.010015156851456722, -1.204313516067877, 0.012278173994288235, 1.5478234665129371, 0.018026071837702762],
+    [0.05550931186866582, 0.13278802823099428, 0.010055543661264791, -0.9745095919281656, 0.011293837617694867, 1.9218108587929805, 0.013936335285702506],
+    [0.08888298142600895, 0.36669630976401607, 0.010013958355675992, -1.3982740615817493, 0.00486415722708451, 1.2644130257614967, 0.04091324496186948],
+    [0.05550931186866582, 0.13278802823099428, 0.010055543661264791, -0.9745095919281656, 0.011293837617694867, 1.9218108587929805, 0.013936335285702506],
+    # [1.5877845647728397, -0.7370301912308904, 0.010037986739820511, -1.470312615687773, 0.013016498184298444, 1.2977129922461899, 0.014328758714462495],
+    # [1.5877856433863173, -0.046436055218386695, 0.010041402240083585, -1.4702307634546792, 0.013016689821450312, 1.2975146533572426, 0.014329178138898365],
+    
+    # [1.5877810893859667, -0.046418498296942425, 0.010031215734987399, -0.29734863350379914, 0.013013526063115222, 2.0388879875668087, 0.014328878596765491],
+    # [1.5877822278860543, -0.04638362421865985, 0.010032234352772094, -0.2973507308441447, -2.67047148865588, 2.0388879875668087, 0.014329897214550184],
+    
+    # [0.05550931186866582, 0.13278802823099428, 0.010055543661264791, -0.9745095919281656, 0.011293837617694867, 1.9218108587929805, 0.013936335285702506],
+    # [0.08888298142600895, 0.36669630976401607, 0.010013958355675992, -1.3982740615817493, 0.00486415722708451, 1.2644130257614967, 0.04091324496186948],
+    
+    # [0.05550931186866582, 0.13278802823099428, 0.010055543661264791, -0.9745095919281656, 0.011293837617694867, 1.9218108587929805, 0.013936335285702506],
+    # [0.05550931186866582, 0.13278802823099428, 0.010055543661264791, -0.9745095919281656, 0.011293837617694867, 1.9218108587929805, 0.013936335285702506]
+    ]
+    # iiwa.movePTPJointSpace(poses[3], [0.25])
+    # iiwa.movePTPJointSpace(poses[2], [0.1])
+    # subprocess.run(['python', gripper_open_script])
+    # iiwa.movePTPJointSpace(poses[4], [1])
+    # exit()
+    itr = 0
+    for pose in poses:
+        itr+=1
+        print(itr)
+        if itr == 4:
+            subprocess.run(['python', gripper_close_script])
+        if itr == 6 or itr == 16:
+            vel = [0.1]
+        else:
+            vel = [0.25]
+        iiwa.movePTPJointSpace(pose, vel)  
+        if itr == 6:
+            subprocess.run(['python', gripper_open_script])  
+        if itr == 16:
+            subprocess.run(['python', gripper_open_script])
+    exit()
+
+    go_home()
     # print(iiwa.getEEFPos())
     # reset_pose()
     # print(iiwa.getEEFPos())
