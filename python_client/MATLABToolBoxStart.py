@@ -204,8 +204,6 @@ class MATLABToolBoxStart():
                             if self._str2bool(message_elements[9]): # means succesfully set the state but app state is error
                                 return True
                         if message_elements[8] == status:
-                            if int(message_elements[3]) != 0: # this means there is an error with the controller message/application activateion
-                                return False
                             print(f"Received expected status '{status}' in the message.")
                             return True
                     except Exception as e:
