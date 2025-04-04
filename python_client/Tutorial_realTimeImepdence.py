@@ -23,7 +23,7 @@ from MATLABToolBoxStart import MATLABToolBoxStart
 
 # KUKA iiwa robot IP and port
 #KUKA_IP = "192.168.0.50"  # Replace with actual robot IP KUKA 141
-KUKA_IP = "192.168.0.49"  # Replace with actual robot IP KUKA 71
+KUKA_IP = "192.168.8.147"  # Replace with actual robot IP KUKA 71
 KUKA_PORT = 30300 # default port, any changes should reflect in WB
 # start the matlab client
 wakeup = MATLABToolBoxStart(KUKA_IP,KUKA_PORT)
@@ -87,10 +87,11 @@ try:
         jpos[index] = jpos0_6 + a * math.sin(theta)
 
         if (getSecs() - t_0) > 0.002:
+            print(jpos)
             iiwa.sendJointsPositions(jpos)
             t_0 = getSecs()
             counter = counter + 1
-
+    print('end before start')
     deltat = getSecs() - t0
     # movig point to point again
     iiwa.realTime_stopDirectServoJoints()

@@ -93,6 +93,7 @@ class iiwaPy3:
         self.rtl.realTime_startDirectServoJoints()
 
     def realTime_startImpedanceJoints(self, weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness):
+        print('rerouting')
         self.rtl.realTime_startImpedanceJoints(weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness)
 
     # Joint space servo command

@@ -40,7 +40,7 @@ class RealTime:
         time.sleep(0.3)
 
     def realTime_startImpedanceJoints(self, weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness):
-        theCommand = 'startSmartImpedanceJoints' # typo but modified to match the matlab server java script
+        theCommand = 'startSmartImpedneceJoints' # typo but modified to match the matlab server java script
         theCommand = theCommand + '_' + str(weightOfTool)
         theCommand = theCommand + '_' + str(cOMx)
         theCommand = theCommand + '_' + str(cOMy)
@@ -49,6 +49,7 @@ class RealTime:
         theCommand = theCommand + '_' + str(rStifness)
         theCommand = theCommand + '_' + str(nStifness) + '_'
         self.send(theCommand)
+        print('sent')
         time.sleep(0.3)
 
     def realTime_stopImpedanceJoints(self):
