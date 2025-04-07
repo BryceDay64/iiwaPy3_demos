@@ -1,5 +1,6 @@
 import math
 import time
+import keyboard
 
 # gripper_open_script = "/home/l5vel/kuka/onrobot-rg/src/open_demo.py"
 # gripper_close_script = "/home/l5vel/kuka/onrobot-rg/src/close_demo.py"
@@ -32,7 +33,7 @@ null_space_angle = 80
 available_pos = {
     'curled':                   [0, -115, 0, -115, 0, 115, 0],
     'extended':                 [-1.27, -111.58, -.01, -65.79, .1, 46.99, 0],
-    'beneath_bulb_unscrewed':   [-39.68, -104.67, -.01, -62.29, .1, 43.57, -160],
+    'beneath_bulb_unscrewed':   [-39.68, -106.62, 0, -63.41, .09, 44.39, -160],
     'on_bulb_unscrewed':        [-39.69, -101.91, -.01, -60.52, .11, 42.58, -160],
     'full_bulb_unscrewed':      [-39.69, -100.21, -0.01, -59.34, 0.1, 42.07, -160],
     'full_bulb_screwed':        [-39.69, -100.21, -0.01, -59.34, 0.1, 42.07, 160],
@@ -81,7 +82,8 @@ try:
         available_pos['curled'],
         available_pos['extended'],
         available_pos['beneath_bulb_unscrewed'],
-        available_pos['on_bulb_unscrewed']
+        available_pos['extended'],
+        available_pos['curled'],
     ]
 
     # iiwa.movePTPJointSpace(poses[3], [0.25])
@@ -93,8 +95,14 @@ try:
     vel = [0.1]
     print(poses)
     for pose in poses:
+        itr += 1
         print(pose)
         iiwa.movePTPJointSpace(pose, vel)
+        if itr == 3:
+            print('Press esc when finished with alignment!')
+            while True:
+                if keyboard.is_pressed('esc'):
+                    break
 
 except Exception as e:
     print(f"An error occurred: {e}")

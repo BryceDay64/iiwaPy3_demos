@@ -35,12 +35,12 @@ null_space_angle = 80
 
 # Positions in degrees
 available_pos = {
-    'curled':                   [0, -115, 0, -115, 0, 115, 0],
+    'curled':                   [0, -30, 0, -115, 0, 115, 0],
     'extended':                 [-1.27, -111.58, -.01, -65.79, .1, 46.99, 0],
     'beneath_bulb_unscrewed':   [-39.68, -104.67, -.01, -62.29, .1, 43.57, -160],
     'on_bulb_unscrewed':        [-39.69, -101.91, -.01, -60.52, .11, 42.58, -160],
-    'full_bulb_unscrewed':      [-39.69, -100.21, -0.01, -59.34, 0.1, 42.07, -160],
-    'full_bulb_screwed':        [-39.69, -100.21, -0.01, -59.34, 0.1, 42.07, 160],
+    'full_bulb_unscrewed':      [-39.69, -101.19, 0, -60.02, 0.1, 42.36, -160],
+    'full_bulb_screwed':        [-39.69, -101.19, 0, -60.02, 0.1, 42.36, 160],
     'on_bulb_screwed':          [-39.69, -101.91, -.01, -60.52, .11, 42.58, 160],
     'beneath_bulb_screwed':     [-39.68, -104.67, -.01, -62.29, .1, 43.57, 160]
 }
@@ -115,40 +115,65 @@ try:
         iiwa.movePTPJointSpace(pose, vel)
 
         match itr:
+            case 1:
+                placeholder = 1
+                vel =[0.4]
+            case 2:
+                vel = [0.4]
+            case 3:
+                # fully open
+                target_width = gripper_obj.get_gp_wd() + (5 * step)  # Increase width
+                gripper_obj.set_target(target_width)
+                time.sleep(0.5)
+                vel = [0.1]
             case 4:
                 # grab
-                target_width = gripper_obj.get_gp_wd() - step  # Increase width
-                gripper_obj.set_target(target_width)
-            case 5:
-                # full close
                 target_width = gripper_obj.get_gp_wd() - (2*step)  # Increase width
                 gripper_obj.set_target(target_width)
+                time.sleep(1)
+            case 5:
+                # full close
+                target_width = gripper_obj.get_gp_wd() - (3*step)  # Increase width
+                gripper_obj.set_target(target_width)
+                time.sleep(0.5)
+                vel = [0.4]
             case 6:
                 # release
-                target_width = gripper_obj.get_gp_wd() + step  # Increase width
-                gripper_obj.set_target(target_width)
-            case 7:
-                # full open
+                print('here')
                 target_width = gripper_obj.get_gp_wd() + (2*step)  # Increase width
                 gripper_obj.set_target(target_width)
+                time.sleep(1)
+                vel = [0.1]
+            case 7:
+                # full open
+                target_width = gripper_obj.get_gp_wd() + (3*step)  # Increase width
+                gripper_obj.set_target(target_width)
+                time.sleep(0.5)
             case 8:
-                time.sleep(10)
+                time.sleep(3)
             case 9:
                 # grab
-                target_width = gripper_obj.get_gp_wd() - step  # Increase width
+                target_width = gripper_obj.get_gp_wd() - (2*step)  # Increase width
                 gripper_obj.set_target(target_width)
+                time.sleep(1)
             case 10:
                 # full close
-                target_width = gripper_obj.get_gp_wd() - (2 * step)  # Increase width
+                target_width = gripper_obj.get_gp_wd() - (3 * step)  # Increase width
                 gripper_obj.set_target(target_width)
+                time.sleep(0.5)
+                vel = [0.4]
             case 11:
                 # release
-                target_width = gripper_obj.get_gp_wd() + step  # Increase width
+                target_width = gripper_obj.get_gp_wd() + (2*step)  # Increase width
                 gripper_obj.set_target(target_width)
+                time.sleep(1)
+                vel = [0.1]
             case 12:
                 # full open
-                target_width = gripper_obj.get_gp_wd() + (2 * step)  # Increase width
+                target_width = gripper_obj.get_gp_wd() + (3 * step)  # Increase width
                 gripper_obj.set_target(target_width)
+                time.sleep(0.5)
+                vel = [0.4]
 
 except Exception as e:
     print(f"An error occurred: {e}")
