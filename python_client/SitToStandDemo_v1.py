@@ -2,7 +2,7 @@ import math
 import time
 import keyboard
 import numpy as np
-# import subprocess
+# import subproces
 
 from iiwaPy3 import iiwaPy3
 from MATLABToolBoxStart import MATLABToolBoxStart
@@ -23,19 +23,19 @@ null_space_angle = 80
 
 # Positions in degrees
 available_pos = {
-    'curled':                   [0, -115, 0, -115, 0, 115, 0],
-    'curled away':              [-160, -30, 0, -115, 0, 115, 0],
-    'helping':                  [0, -90, 0, 45, 0, 45, 0],
-    'midway':                   [-49.32, -79.38, -.55, -20.61, -.1, 55.61, .66]
+    'curled':                   [0, -115, 0, -115, 0, 115, -90],
+    'curled away':              [-160, -30, 0, -115, 0, 115, -90],
+    'helping':                  [0, -90, 0, 45, 0, 45, -90],
+    'midway':                   [-49.32, -79.38, -.55, -20.61, -.1, 55.61, -90]
 }
 
-weightOfTool = 1.73  # 1 kg
+weightOfTool = .25  # 1 kg
 cOMx = 0.01554
 cOMy = 0.01906
 cOMz = 0.05352
 
 cStiness = 2500
-rStifness = 80
+rStifness = 50
 nStifness = 50
 
 for key, value in available_pos.items():
@@ -58,14 +58,17 @@ try:
     print('CONNECTED')
     vel = [0.4]
     iiwa.movePTPJointSpace(available_pos['curled away'], vel)
-
+    run = 0
     while True:
-        if keyboard.is_pressed('h'):
+        if keyboard.is_pressed('shift'):
             vel = [0.4]
             iiwa.movePTPJointSpace(available_pos['helping'], vel)
-            # iiwa.realTime_startImpedanceJoints(weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness)
-            # iiwa.realTime_stopDirectServoJoints()
+            if run >= 1:
+                iiwa.realTime_startImpedanceJoints(weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness)
+                run += 1
+                iiwa.realTime_stopDirectServoJoints()
             iiwa.realTime_startImpedanceJoints(weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness)
+            run += 1
             time.sleep(1)
             vel = [0.4]
             itr = 0
@@ -87,7 +90,7 @@ try:
             time.sleep(4)
             iiwa.realTime_stopDirectServoJoints()
             iiwa.movePTPJointSpace(available_pos['midway'], [0.1])
-            time.sleep(1)
+            time.sleep(1.5)
             iiwa.movePTPJointSpace(available_pos['curled away'], [0.4])
             print('stopped')
 
