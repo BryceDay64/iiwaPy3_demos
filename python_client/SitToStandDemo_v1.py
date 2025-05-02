@@ -69,25 +69,46 @@ try:
                 iiwa.realTime_stopDirectServoJoints()
             iiwa.realTime_startImpedanceJoints(weightOfTool, cOMx, cOMy, cOMz, cStiness, rStifness, nStifness)
             run += 1
+            time.sleep(0.5)
+
+            print ('here')
+            step = 45
+            while step <= 60:
+                step_rad = math.radians(step)
+                newPos = available_pos['helping']
+                newPos[5] = step_rad
+                iiwa.sendJointsPositions(newPos)
+                step += 1
+            while step >= 45:
+                step_rad = math.radians(step)
+                newPos = available_pos['helping']
+                newPos[5] = step_rad
+                iiwa.sendJointsPositions(newPos)
+                step -= 1
+
             time.sleep(1)
-            vel = [0.4]
-            itr = 0
-            steps = 1000
-            # stepLength = ((1 - (1 / (1 + steps))) * np.array(helping) +
-            #             (1 / (1 + steps)) * np.array(curledAway))
-            jointDiff = np.array(available_pos['curled away'])-np.array(available_pos['helping'])
-            stepLength = np.array(jointDiff)/(steps-1)
-            while itr < steps:
-                newPoint = np.array(available_pos['helping'])+itr*np.array(stepLength)
-                newPoint = newPoint.tolist()
-                # temp_list = []
-                # for item in newPoint:
-                #     item = math.degrees(item)
-                #     temp_list.append(item)
-                # newPoint = temp_list
-                iiwa.sendJointsPositions(newPoint)
-                itr += 1
-            time.sleep(4)
+            while True:
+                deflection = iiwa.getJointsPos()[1]
+                if deflection < math.radians(-92) or keyboard.is_pressed('shift'):
+                    itr = 0
+                    steps = 1000
+                    # stepLength = ((1 - (1 / (1 + steps))) * np.array(helping) +
+                    #             (1 / (1 + steps)) * np.array(curledAway))
+                    jointDiff = np.array(available_pos['curled away'])-np.array(available_pos['helping'])
+                    stepLength = np.array(jointDiff)/(steps-1)
+                    while itr < steps:
+                        newPoint = np.array(available_pos['helping'])+itr*np.array(stepLength)
+                        newPoint = newPoint.tolist()
+                        # temp_list = []
+                        # for item in newPoint:
+                        #     item = math.degrees(item)
+                        #     temp_list.append(item)
+                        # newPoint = temp_list
+                        iiwa.sendJointsPositions(newPoint)
+                        itr += 1
+                    time.sleep(4)
+                    break
+
             iiwa.realTime_stopDirectServoJoints()
             iiwa.movePTPJointSpace(available_pos['midway'], [0.1])
             time.sleep(1.5)
@@ -102,8 +123,7 @@ try:
         elif keyboard.is_pressed('esc'):
             iiwa.realTime_stopDirectServoJoints()
             time.sleep(0.5)
-            vel = [0.4]
-            iiwa.movePTPJointSpace(available_pos['curled away'], vel)
+            iiwa.movePTPJointSpace(available_pos['curled away'], [0.4])
             break
 
 except Exception as e:
