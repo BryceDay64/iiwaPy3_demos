@@ -91,11 +91,18 @@ try:
         available_pos['full_bulb_screwed'],
         available_pos['on_bulb_screwed'],
         available_pos['beneath_bulb_screwed'],
-        available_pos['on_bulb_screwed'],
-        available_pos['full_bulb_screwed'],
-        available_pos['full_bulb_unscrewed'],
-        available_pos['on_bulb_unscrewed'],
         available_pos['beneath_bulb_unscrewed'],
+        available_pos['on_bulb_unscrewed'],
+        available_pos['full_bulb_unscrewed'],
+        available_pos['full_bulb_screwed'],
+        available_pos['on_bulb_screwed'],
+        available_pos['beneath_bulb_screwed'],
+        available_pos['beneath_bulb_unscrewed'],
+        available_pos['on_bulb_unscrewed'],
+        available_pos['full_bulb_unscrewed'],
+        available_pos['full_bulb_screwed'],
+        available_pos['on_bulb_screwed'],
+        available_pos['beneath_bulb_screwed'],
         available_pos['extended'],
         available_pos['curled']
     ]
@@ -107,6 +114,7 @@ try:
     # exit()
     itr = 0
     vel = [0.1]
+    turn_vel = [1]
     print(poses)
     for pose in poses:
         print(pose)
@@ -116,10 +124,9 @@ try:
 
         match itr:
             case 1:
-                placeholder = 1
-                vel =[0.4]
+                vel = [0.6]
             case 2:
-                vel = [0.4]
+                vel = [0.6]
             case 3:
                 # fully open
                 target_width = gripper_obj.get_gp_wd() + (5 * step)  # Increase width
@@ -136,7 +143,7 @@ try:
                 target_width = gripper_obj.get_gp_wd() - (3*step)  # Increase width
                 gripper_obj.set_target(target_width)
                 time.sleep(0.5)
-                vel = [0.4]
+                vel = turn_vel
             case 6:
                 # release
                 print('here')
@@ -150,30 +157,63 @@ try:
                 gripper_obj.set_target(target_width)
                 time.sleep(0.5)
             case 8:
-                time.sleep(3)
+                vel = turn_vel
             case 9:
+                # fully open
+                vel = [0.1]
+            case 10:
                 # grab
-                target_width = gripper_obj.get_gp_wd() - (2*step)  # Increase width
+                target_width = gripper_obj.get_gp_wd() - (2 * step)  # Increase width
                 gripper_obj.set_target(target_width)
                 time.sleep(1)
-            case 10:
+            case 11:
                 # full close
                 target_width = gripper_obj.get_gp_wd() - (3 * step)  # Increase width
                 gripper_obj.set_target(target_width)
                 time.sleep(0.5)
-                vel = [0.4]
-            case 11:
+                vel = turn_vel
+            case 12:
                 # release
-                target_width = gripper_obj.get_gp_wd() + (2*step)  # Increase width
+                print('here')
+                target_width = gripper_obj.get_gp_wd() + (2 * step)  # Increase width
                 gripper_obj.set_target(target_width)
                 time.sleep(1)
                 vel = [0.1]
-            case 12:
+            case 13:
                 # full open
                 target_width = gripper_obj.get_gp_wd() + (3 * step)  # Increase width
                 gripper_obj.set_target(target_width)
                 time.sleep(0.5)
-                vel = [0.4]
+            case 14:
+                vel = turn_vel
+            case 15:
+                # fully open
+                vel = [0.1]
+            case 16:
+                # grab
+                target_width = gripper_obj.get_gp_wd() - (2 * step)  # Increase width
+                gripper_obj.set_target(target_width)
+                time.sleep(1)
+            case 17:
+                # full close
+                target_width = gripper_obj.get_gp_wd() - (3 * step)  # Increase width
+                gripper_obj.set_target(target_width)
+                time.sleep(0.5)
+                vel = turn_vel
+            case 18:
+                # release
+                print('here')
+                target_width = gripper_obj.get_gp_wd() + (2 * step)  # Increase width
+                gripper_obj.set_target(target_width)
+                time.sleep(1)
+                vel = [0.1]
+            case 19:
+                # full open
+                target_width = gripper_obj.get_gp_wd() + (3 * step)  # Increase width
+                gripper_obj.set_target(target_width)
+                time.sleep(0.5)
+            case 20:
+                vel = [0.6]
 
 except Exception as e:
     print(f"An error occurred: {e}")
