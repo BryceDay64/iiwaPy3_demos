@@ -89,7 +89,7 @@ try:
             time.sleep(1)
             while True:
                 deflection = iiwa.getJointsPos()[1]
-                if deflection < math.radians(-92) or keyboard.is_pressed('shift'):
+                if deflection < math.radians(-91) or keyboard.is_pressed('shift'):
                     itr = 0
                     steps = 1000
                     # stepLength = ((1 - (1 / (1 + steps))) * np.array(helping) +
