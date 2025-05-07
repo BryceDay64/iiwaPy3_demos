@@ -1,12 +1,16 @@
 import math
 import time
 from onrobot_sg import SG
+from playsound import playsound
 
 # gripper_open_script = "/home/l5vel/kuka/onrobot-rg/src/open_demo.py"
 # gripper_close_script = "/home/l5vel/kuka/onrobot-rg/src/close_demo.py"
 
 from iiwaPy3 import iiwaPy3
 from MATLABToolBoxStart import MATLABToolBoxStart
+
+playsound("C:/Users/bcd5306/PycharmProjects/iiwaPy3_demos/Kuka_Start.mp3")
+print('here')
 
 # KUKA iiwa robot IP and port
 KUKA_IP = "192.168.8.147"  # Replace with actual robot IP KUKA 14
@@ -125,7 +129,11 @@ try:
         match itr:
             case 1:
                 vel = [0.6]
+                target_width = gripper_obj.get_gp_wd() + (5 * step)  # Increase width
+                gripper_obj.set_target(target_width)
             case 2:
+                target_width = gripper_obj.get_gp_wd() - (5 * step)  # Increase width
+                gripper_obj.set_target(target_width)
                 vel = [0.6]
             case 3:
                 # fully open
