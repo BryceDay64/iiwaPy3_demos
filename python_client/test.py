@@ -1,7 +1,4 @@
-import threading
-import keyboard
-import time
-import os
+from playsound import playsound
 
 def run_continuously():
     while True:
