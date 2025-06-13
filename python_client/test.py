@@ -1,18 +1,18 @@
-from playsound import playsound
+from python_client.EMG_trigger import EmgTrigger
+import time
 
-def run_continuously():
-    while True:
-        time.sleep(0.1)
 
-        if keyboard.is_pressed('esc'):
-            print('here')
-            os._exit(32)
+server_ip = "127.0.0.1"
+port = 9220
 
-thread = threading.Thread(target=run_continuously)
-thread.daemon = True
-thread.start()
+emg = EmgTrigger(server_ip, port)
 
-# Continue with other tasks in the main thread
-while True:
-    print('running')
-    time.sleep(1)
+emg.get_emg_channel()
+
+trigger = False
+while not trigger:
+    samples = emg.sample_get()
+    for ch in samples['channels']:
+        trigger = emg.emg_trigger_boolean(ch, 125)
+    time.sleep(0.2)
+print('trigger')
