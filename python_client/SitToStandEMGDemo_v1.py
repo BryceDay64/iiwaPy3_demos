@@ -2,23 +2,24 @@ import math
 import time
 import keyboard
 import numpy as np
-import requests
 
 from iiwaPy3 import iiwaPy3
 from MATLABToolBoxStart import MATLABToolBoxStart
 
-local_host = True
+from python_client.EMG_trigger import EmgTrigger
 
-if local_host:
-    # EMG Localhost IP and Port
-    EMG_IP = "127.0.0.1"
-    EMG_Port = 9220
+impedance_help = False
+emg_triggering = False
+
+emg_local_host = True
+
+if emg_local_host:
+    # EMG Localhost IP
+    emg_server_ip = "127.0.0.1"
 else:
-    # EMG IP and port
-    EMG_IP = "172.16.207.72"
-    EMG_Port = 9220
-
-
+    # EMG IP
+    emg_server_ip = "172.16.207.72"
+emg_port = 9220
 
 # KUKA iiwa robot IP and port
 KUKA_IP = "192.168.8.147"  # Replace with actual robot IP KUKA 14
@@ -72,8 +73,29 @@ try:
     vel = [0.4]
     iiwa.movePTPJointSpace(available_pos['curled away'], vel)
     run = 0
+
+    if emg_triggering:
+        emg = EmgTrigger(emg_server_ip, emg_port)
+        emg.get_emg_channel()
+
+    armed = False
+    fired = False
     while True:
-        if keyboard.is_pressed('shift'):
+        trigger = False
+        if emg_triggering:
+            samples = emg.sample_get()
+
+        if keyboard.is_pressed('a'):
+            armed = True
+        if keyboard.is_pressed('d'):
+            armed =False
+
+        if armed and emg_triggering:
+            for ch in samples['channels']:
+                trigger = emg.emg_trigger_boolean(ch, 125)
+                print(trigger)
+        if keyboard.is_pressed('shift') or trigger and not fired:
+            fired = True
             vel = [0.4]
             iiwa.movePTPJointSpace(available_pos['helping'], vel)
             if run >= 1:
@@ -84,7 +106,6 @@ try:
             run += 1
             time.sleep(0.5)
 
-            print ('here')
             step = 45
             while step <= 60:
                 step_rad = math.radians(step)
@@ -103,23 +124,24 @@ try:
             while True:
                 deflection = iiwa.getJointsPos()[1]
                 if deflection < math.radians(-91) or keyboard.is_pressed('shift'):
-                    itr = 0
-                    steps = 1000
-                    # stepLength = ((1 - (1 / (1 + steps))) * np.array(helping) +
-                    #             (1 / (1 + steps)) * np.array(curledAway))
-                    jointDiff = np.array(available_pos['curled away'])-np.array(available_pos['helping'])
-                    stepLength = np.array(jointDiff)/(steps-1)
-                    while itr < steps:
-                        newPoint = np.array(available_pos['helping'])+itr*np.array(stepLength)
-                        newPoint = newPoint.tolist()
-                        # temp_list = []
-                        # for item in newPoint:
-                        #     item = math.degrees(item)
-                        #     temp_list.append(item)
-                        # newPoint = temp_list
-                        iiwa.sendJointsPositions(newPoint)
-                        itr += 1
-                    time.sleep(4)
+                    if impedance_help:
+                        itr = 0
+                        steps = 1000
+                        # stepLength = ((1 - (1 / (1 + steps))) * np.array(helping) +
+                        #             (1 / (1 + steps)) * np.array(curledAway))
+                        jointDiff = np.array(available_pos['curled away'])-np.array(available_pos['helping'])
+                        stepLength = np.array(jointDiff)/(steps-1)
+                        while itr < steps:
+                            newPoint = np.array(available_pos['helping'])+itr*np.array(stepLength)
+                            newPoint = newPoint.tolist()
+                            # temp_list = []
+                            # for item in newPoint:
+                            #     item = math.degrees(item)
+                            #     temp_list.append(item)
+                            # newPoint = temp_list
+                            iiwa.sendJointsPositions(newPoint)
+                            itr += 1
+                        time.sleep(4)
                     break
 
             iiwa.realTime_stopDirectServoJoints()
@@ -138,6 +160,9 @@ try:
             time.sleep(0.5)
             iiwa.movePTPJointSpace(available_pos['curled away'], [0.4])
             break
+        else:
+            fired = False
+        time.sleep(0.2)
 
 except Exception as e:
     print(f"An error occurred: {e}")
