@@ -7,7 +7,7 @@ import requests
 from iiwaPy3 import iiwaPy3
 from MATLABToolBoxStart import MATLABToolBoxStart
 
-local_host = False
+local_host = True
 
 if local_host:
     # EMG Localhost IP and Port
