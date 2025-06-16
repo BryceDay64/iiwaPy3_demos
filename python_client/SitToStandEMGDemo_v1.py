@@ -9,12 +9,13 @@ from MATLABToolBoxStart import MATLABToolBoxStart
 from python_client.EMG_trigger import EmgTrigger
 
 impedance_help = False
-emg_triggering = False
+emg_triggering = True
 
-emg_threshold = 125
+emg_threshold = 65
 
 '''
-Bryce rectus femorus threshold is 125
+Bryce right RF threshold is 125
+Rachel left RF threshold is 65
 '''
 
 emg_local_host = True
