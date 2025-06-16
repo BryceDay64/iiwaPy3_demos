@@ -9,7 +9,7 @@ from playsound import playsound
 from iiwaPy3 import iiwaPy3
 from MATLABToolBoxStart import MATLABToolBoxStart
 
-playsound("C:/Users/bcd5306/PycharmProjects/iiwaPy3_demos/Kuka_Start.mp3")
+playsound("C:/Users/Vicon-OEM/PycharmProjects/iiwaPy3_demos/Kuka_Start.mp3")
 print('here')
 
 # KUKA iiwa robot IP and port
