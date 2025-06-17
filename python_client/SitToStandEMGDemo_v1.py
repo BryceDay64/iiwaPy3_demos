@@ -1,6 +1,7 @@
 import math
 import time
 import keyboard
+from playsound import playsound
 import numpy as np
 
 from iiwaPy3 import iiwaPy3
@@ -100,6 +101,9 @@ try:
         if armed and emg_triggering:
             for ch in samples['channels']:
                 trigger = emg.emg_trigger_boolean(ch, emg_threshold)
+                if trigger:
+                    time.sleep(0.75)
+                    #  playsound("C:/Users/Vicon-OEM/Documents/Demo Sound/Robot I need help.m4a")
                 print(trigger)
         if keyboard.is_pressed('shift') or trigger and not fired:
             fired = True
@@ -153,7 +157,7 @@ try:
 
             iiwa.realTime_stopDirectServoJoints()
             iiwa.movePTPJointSpace(available_pos['midway'], [0.1])
-            time.sleep(1.5)
+            time.sleep(2)
             iiwa.movePTPJointSpace(available_pos['curled away'], [0.4])
             print('stopped')
 
